@@ -1,0 +1,57 @@
+﻿@page "/"
+@using BlazorApp1.Components
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ILogger<Index> Logger;
+@inject ProtectedLocalStorage LocalStorage;
+<PageTitle>Крестики-нолики</PageTitle>
+
+<h1>Welcome to the jungle</h1>
+<h3>Добро пожаловать в игру, Крестики-нолики</h3>
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<div>Время: @DateTime.Now</div>
+@if(_savedName == null)
+{
+
+<a>Who are you?</a>
+
+<EditForm Model="@_model" OnValidSubmit="@HandleValidSubmit">
+   Name: <InputText @bind-Value="_model.Name"> </InputText>
+   <input type="submit" value="Сохранить" />
+    </EditForm>
+}
+else
+{
+    <div> Hello @_savedName</div>
+}
+
+<BoardComponent />
+@code {
+    private FormModel _model = new();
+    private const string Namekey = "Name";
+    private string? _savedName;
+    private class FormModel
+    {
+        public string Name { get; set; }
+
+    }
+    private async Task HandleValidSubmit()
+    {
+        Logger.LogInformation("Имя Пользователя {Name}", _model.Name);
+        _savedName = _model.Name;
+        await LocalStorage.SetAsync(Namekey, _model.Name);
+    }
+    protected override async Task OnAfterRenderAsync(bool name)
+    {
+        await base.OnAfterRenderAsync(name);
+        if(name)
+        {
+            var result = await LocalStorage.GetAsync<string>(Namekey);
+            if(result.Success)
+            {
+                _savedName = result.Value;
+                StateHasChanged();
+            }
+        }
+    }
+}

@@ -1,0 +1,34 @@
+﻿body {
+}
+.tictac-board {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    max-width: 490px;
+}
+
+.tictac-column {
+    min-width: 60px;
+    min-height: 60px;
+    height: 100%;
+}
+
+.tictac-cell {
+    border: solid 1px black;
+    min-height: 60px;
+    min-width: 60px;
+}
+
+.tictac-cell-X {
+    background-image: url("/images/letter-x.png");
+    background-repeat: no-repeat;
+}
+
+.tictac-cell-O {
+    background-image: url("../images/tictactoe/letter-o.png");
+    background-repeat: no-repeat;
+}
+
+.tictac-blank {
+    background-image: none;
+}
