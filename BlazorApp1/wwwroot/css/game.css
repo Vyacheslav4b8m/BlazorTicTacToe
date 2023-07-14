@@ -20,12 +20,12 @@
 }
 
 .tictac-cell-X {
-    background-image: url("/images/letter-x.png");
+    background-image: url("../images/letter-x.png");
     background-repeat: no-repeat;
 }
 
 .tictac-cell-O {
-    background-image: url("../images/tictactoe/letter-o.png");
+    background-image: url("/images/letter-o.png");
     background-repeat: no-repeat;
 }
 

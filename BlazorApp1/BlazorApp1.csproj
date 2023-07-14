@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="domain\CellEnum.cs" />
+    <Content Include="domain\Board.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="domain\CellEnum.cs" />
+    <None Include="domain\Board.cs" />
   </ItemGroup>
 
 </Project>
