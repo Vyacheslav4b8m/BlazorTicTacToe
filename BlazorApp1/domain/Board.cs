@@ -8,7 +8,8 @@
     {
         Xwon,
         Owom,
-        Draw
+        Draw,
+        Unknow
     }
     public enum Gamer
     {
@@ -30,32 +31,42 @@
         //тернарный опретор
         public void NextTurns()
         {
+            
             CurrentTurn = CurrentTurn == CellState.X ? CellState.O : CellState.X;
         }
 
-        public void CellClick(int row, int column)
+        public void CellClickRevers(int row, int column)
         {
-            if (Cells[row, column] == CellState.Blank)
+            var gameresult = GetGameResult(out _);
+            if (gameresult == GameResult.Unknow)
             {
-                Cells[row, column] = CurrentTurn;
-                NextTurns();
+
+                if (Cells[row, column] == CellState.Blank)
+                {
+                    Cells[row, column] = CurrentTurn;
+                    NextTurns();
+                }
             }
         }
 
-        public GameResult GetGameResult()
+        public GameResult GetGameResult(out CellPosition[] winCell)
         {
-            if(GameCheck(Gamer.X))
+            if (GameCheck(Gamer.X, out winCell))
             {
                 return GameResult.Xwon;
             }
-            else if(GameCheck(Gamer.O))
+            else if(GameCheck(Gamer.O, out winCell))
             {
                 return GameResult.Owom;
             }
-            return GameResult.Draw;
-
+            //else if(GameCheck())
+            //{
+            //    return GameResult.Draw;
+            //}
+            return GameResult.Unknow;
         }
-        public bool GameCheck(Gamer gamer)
+
+        public bool GameCheck(Gamer gamer, out CellPosition[] winCell)
         {
             CellState expectedCellState;
             if (gamer == Gamer.X)
@@ -73,31 +84,41 @@
                     }
                     if(expcount == 3)
                     {
+                        winCell = new CellPosition[]
+                        {
+                            new CellPosition(0, column),
+                            new CellPosition(1, column),
+                            new CellPosition(2, column)
+                        };
                         return true;
                     }
                 }
             }
-            //if (Cells[0, 0] == expectedCellState && Cells[1, 0] == expectedCellState && Cells[2, 0] == expectedCellState)
-            //{
-            //    return true;
-            //}
-            //if (Cells[0, 1] == expectedCellState && Cells[1, 1] == expectedCellState && Cells[2, 1] == expectedCellState)
-            //{
-            //    return true;
-            //}
-            //if (Cells[0, 2] == expectedCellState && Cells[1, 2] == expectedCellState && Cells[2, 2] == expectedCellState)
-            //{
-            //    return true;
-            //}
-            //if (Cells[0, 0] == expectedCellState && Cells[1, 1] == expectedCellState && Cells[2, 2] == expectedCellState)
-            //{
-            //    return true;
-            //}
-            //if (Cells[2, 0] == expectedCellState && Cells[1, 1] == expectedCellState && Cells[0, 2] == expectedCellState)
-            //{
-            //    return true;
-            //}
+            for (int row = 0; row < RowCount; row++)
+            {
+                var expcount = 0;
+                for (int column = 0; column < ColumCount; column++)
+                {
+                    if (Cells[row, column] == expectedCellState)
+                    {
+                        expcount++;
+                    }
+                    if (expcount == 3)
+                    {
+                        winCell = new CellPosition[]
+                         {
+                            new CellPosition(row, 0),
+                            new CellPosition(row, 1),
+                            new CellPosition(row, 2)
+                         };
+                        return true;
+                    }
+                }
+            }
+            winCell = new CellPosition[0];
             return false;
         }
     }
+
+    public record CellPosition(int Row, int Column);
 }
